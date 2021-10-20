@@ -364,7 +364,7 @@ def make_photons(photon_prefix, data_source, redshift, area,
 def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     absorb_model=None, nH=None, no_shifting=False,
                     north_vector=None, sigma_pos=None,
-                    kernel="top_hat", prng=None):
+                    kernel="top_hat", prng=None, true_distance=False):
     r"""
     Projects photons onto an image plane given a line of sight, and
     stores them in an HDF5 dataset which contains an event list.
@@ -486,8 +486,10 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
 
     d = f["data"]
 
-    # D_A = p["fid_d_a"][()]*1.0e3
-    D_A = np.sqrt(d['x'][()]**2 + d['y'][()]**2 + d['z'][()]**2)
+    if true_distance:
+        D_A = np.sqrt(d['x'][()]**2 + d['y'][()]**2 + d['z'][()]**2)
+    else:
+        D_A = p["fid_d_a"][()]*1.0e3
 
     if d["energy"].size == 0:
 
