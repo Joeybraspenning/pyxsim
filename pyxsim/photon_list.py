@@ -486,7 +486,8 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
 
     d = f["data"]
 
-    D_A = p["fid_d_a"][()]*1.0e3
+    # D_A = p["fid_d_a"][()]*1.0e3
+    D_A = np.sqrt(d['x'][()]**2 + d['y'][()]**2 + d['z'][()]**2)
 
     if d["energy"].size == 0:
 
