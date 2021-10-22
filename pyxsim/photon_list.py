@@ -567,6 +567,7 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     xsky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
                     ysky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
 
+                print(xsky.shape, DA.shape)
                 xsky /= D_A
                 ysky /= D_A
 
