@@ -568,10 +568,12 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     ysky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
 
                 if true_distance:
-                    print(xsky.shape, D_A.shape)
-                    print(xsky[:10], D_A[start_c:end_c][:10])
-                    xsky /= D_A[start_c:end_c]
-                    ysky /= D_A[start_c:end_c]
+                    print(xsky.shape, D_A.shape, D_A[start_c:end_c].shape)
+                    print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
+                    xsky /= D_A
+                    ysky /= D_A
+                    print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
+
                 else:
                     xsky /= D_A
                     ysky /= D_A                   
