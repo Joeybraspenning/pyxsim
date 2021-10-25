@@ -556,7 +556,7 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
 
             if num_det > 0:
 
-                if ~lightcone:
+                if lightcone == False:
                     print('no_lightcone')
                     xsky, ysky = scatter_events(norm, prng, kernel, 
                                                 data_type, num_det, det, n_ph,
