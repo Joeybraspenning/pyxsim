@@ -557,6 +557,7 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
             if num_det > 0:
 
                 if ~lightcone:
+                    print('no_lightcone')
                     xsky, ysky = scatter_events(norm, prng, kernel, 
                                                 data_type, num_det, det, n_ph,
                                                 d["x"][start_c:end_c],
@@ -582,8 +583,10 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
 
                     pixel_to_cel(xsky, ysky, sky_center)
                 else:
+                    print('lightcone')
                     xsky = d["ra"][start_c:end_c]
                     ysky = d["dec"][start_c:end_c]
+                    print(np.unique(xsky))
 
                 if e_size < n_events + num_det:
                     while n_events + num_det > e_size:
