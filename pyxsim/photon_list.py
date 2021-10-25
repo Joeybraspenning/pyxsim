@@ -364,7 +364,8 @@ def make_photons(photon_prefix, data_source, redshift, area,
 def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     absorb_model=None, nH=None, no_shifting=False,
                     north_vector=None, sigma_pos=None,
-                    kernel="top_hat", prng=None, true_distance=False):
+                    kernel="top_hat", prng=None, true_distance=False,
+                    lightcone=False):
     r"""
     Projects photons onto an image plane given a line of sight, and
     stores them in an HDF5 dataset which contains an event list.
@@ -555,30 +556,34 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
 
             if num_det > 0:
 
-                xsky, ysky = scatter_events(norm, prng, kernel, 
-                                            data_type, num_det, det, n_ph,
-                                            d["x"][start_c:end_c],
-                                            d["y"][start_c:end_c],
-                                            d["z"][start_c:end_c],
-                                            dx, x_hat, y_hat)
+                if ~lightcone:
+                    xsky, ysky = scatter_events(norm, prng, kernel, 
+                                                data_type, num_det, det, n_ph,
+                                                d["x"][start_c:end_c],
+                                                d["y"][start_c:end_c],
+                                                d["z"][start_c:end_c],
+                                                dx, x_hat, y_hat)
 
-                if data_type == "cells" and sigma_pos is not None:
-                    sigma = sigma_pos*np.repeat(dx, n_ph)[det]
-                    xsky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
-                    ysky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
+                    if data_type == "cells" and sigma_pos is not None:
+                        sigma = sigma_pos*np.repeat(dx, n_ph)[det]
+                        xsky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
+                        ysky += sigma*prng.normal(loc=0.0, scale=1.0, size=num_det)
 
-                if true_distance:
-                    print(xsky.shape, D_A.shape, D_A[start_c:end_c].shape)
-                    print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
-                    xsky /= D_A
-                    ysky /= D_A
-                    print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
+                    if true_distance:
+                        print(xsky.shape, D_A.shape, D_A[start_c:end_c].shape)
+                        print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
+                        xsky /= D_A
+                        ysky /= D_A
+                        print(xsky[:10], ysky[:10], D_A[start_c:end_c][:10])
 
+                    else:
+                        xsky /= D_A
+                        ysky /= D_A                   
+
+                    pixel_to_cel(xsky, ysky, sky_center)
                 else:
-                    xsky /= D_A
-                    ysky /= D_A                   
-
-                pixel_to_cel(xsky, ysky, sky_center)
+                    xsky = d["ra"][start_c:end_c]
+                    ysky = d["dec"][start_c:end_c]
 
                 if e_size < n_events + num_det:
                     while n_events + num_det > e_size:
