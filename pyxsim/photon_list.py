@@ -584,9 +584,9 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     pixel_to_cel(xsky, ysky, sky_center)
                 else:
                     print('lightcone')
-                    xsky = d["ra"][start_c:end_c]
-                    ysky = d["dec"][start_c:end_c]
-                    print(np.unique(xsky))
+                    xsky = d["ra"]
+                    ysky = d["dec"]
+                    print(xsky.shape)
 
                 if e_size < n_events + num_det:
                     while n_events + num_det > e_size:
