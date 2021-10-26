@@ -584,8 +584,12 @@ def project_photons(photon_prefix, event_prefix, normal, sky_center,
                     pixel_to_cel(xsky, ysky, sky_center)
                 else:
                     print('lightcone')
-                    xsky = d["ra"]
-                    ysky = d["dec"]
+                    # Scatter within smoothing length
+                    smoothing_length_deg = (d["smoothing_length"] / D_A) * (180 / np.pi)
+                    scatter_event_deg = np.random.uniform(low = np.zeros_like(smoothing_length_deg), high = smoothing_length_deg)
+                    scatter_event_angle = 2*np.pi * np.random.uniform(low = 0, high = 1, size = smoothing_length_deg.shape[0])
+                    xsky = d["ra"] + scatter_event_deg * np.cos(scatter_event_angle)
+                    ysky = d["dec"] + scatter_event_deg * np.sin(scatter_event_angle)
                     print(xsky.shape)
 
                 if e_size < n_events + num_det:
