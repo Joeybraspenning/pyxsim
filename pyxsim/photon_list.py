@@ -18,7 +18,7 @@ from soxs.utils import parse_prng
 
 comm = communication_system.communicators[-1]
 
-init_chunk = 100000
+init_chunk = 1000000
 
 
 def determine_fields(ds, source_type, point_sources):
